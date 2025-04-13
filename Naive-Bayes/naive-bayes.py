@@ -17,16 +17,24 @@
 #     ['lluvia', 'templado', 'alta', 'verdadera'],
 # ]
 from collections import defaultdict
-from filtro import sacarTextos
+from filtro import cargar_textos
 from pathlib import Path
 
 print("antes de sacar textos")
-X = sacarTextos()
+# X = sacarTextos()
+textos_por_categoria = cargar_textos()
 
+print("modelos ya entrenados")
+X = [textos_por_categoria["business"], 
+               textos_por_categoria["entertainment"], 
+               textos_por_categoria["politics"],
+               textos_por_categoria["sport"],
+                textos_por_categoria["tech"]
+            ]
 
 # Etiquetas (sí o no jugar)
 #y = ['no', 'no', 'sí', 'sí', 'sí', 'no', 'sí', 'no', 'sí', 'sí', 'sí', 'sí', 'sí', 'no']
-y = ['business', 'entertainment', 'politics']
+y = ['business', 'entertainment', 'politics', 'sport', 'tech',]
 
 
 
@@ -80,7 +88,7 @@ modelo = entrenar_naive_bayes(X, y)
 nueva_entrada = ['']
 
 def leer_archivo_especifico():
-    ruta = Path(__file__).parent / ".." / "BBC News Summary" / "BBC News Summary" / "News Articles" / "politics" / "008.txt"
+    ruta = Path(__file__).parent / ".." / "BBC News Summary"  / "Summaries" / "tech" / "004.txt"
     ruta = ruta.resolve()  # Convierte la ruta a absoluta
     
     try:
