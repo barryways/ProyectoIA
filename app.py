@@ -28,7 +28,6 @@ def main():
             print(f"Prediction:", prediction)
             return jsonify(response), 200
     else:  # Handle GET request
-        time.sleep(0.5)
         elapsed_time = time.time() - g.start_time
         return render_template('analyst.html', time=f"{elapsed_time:.2f}")
 
