@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await response.json();
             const endTime = performance.now();
 
-            responseDiv.textContent = `Response: ${data.data.input}`;
+            responseDiv.textContent = `Response: ${data.data}`;
             responseTimeDiv.textContent = `Response Time: ${(endTime - startTime).toFixed(2)} ms`;
         } catch (error) {
             responseDiv.textContent = 'Error: Unable to fetch response.';
