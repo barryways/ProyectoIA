@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Submit Text</title>
+    <title>Analizador de Noticias</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
     <div class="container">
-        <h1>Submit Text to API</h1>
+        <h1>Predecir la noticia... </h1>
         <form id="inputForm">
-            <label for="userInput">Enter Text:</label>
+            <label for="userInput">Ingresa aquí la noticia:</label>
             <input type="text" id="userInput" name="userInput" required>
-            <button type="submit">Submit</button>
+            <button type="submit">Mandar</button>
         </form>
         <div id="response"></div>
         <div id="responseTime"></div>

@@ -1,12 +1,12 @@
 from flask import Flask, jsonify, render_template, request, g
 import time
 from naive_bayes import NaiveBayes  # Assuming this is the file name where the model is defined
-
 app = Flask(__name__)
 
 @app.before_request
 def log_route_start():
     g.start_time = time.time()
+    print(f"Request started at {g.start_time}")
     
 @app.after_request
 def log_route_end(response):
@@ -23,7 +23,8 @@ def main():
             return jsonify({'data': 'No data received'}), 400
         else:
             userInputText = data.get('input')
-            prediction = 'NaiveBayes.predictUserInput(userInputText)'  # Assuming this method processes the input
+            print(f"Received text: {userInputText}")
+            prediction = NaiveBayes.predictUserInput(userInputText)  # Assuming this method processes the input
             response = {'message': 'Data received', 'data': prediction}
             print(f"Prediction:", prediction)
             return jsonify(response), 200
@@ -32,4 +33,5 @@ def main():
         return render_template('analyst.html', time=f"{elapsed_time:.2f}")
 
 if __name__ == '__main__':
+    NaiveBayes = NaiveBayes()
     app.run(debug=True)

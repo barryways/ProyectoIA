@@ -1,21 +1,3 @@
-# Datos de entrenamiento (X) y etiquetas (y)
-# Cada fila es un ejemplo: [feature1, feature2, ..., featureN]
-# X = [
-#     ['soleado', 'calor', 'alta', 'falsa'],
-#     ['soleado', 'calor', 'alta', 'verdadera'],
-#     ['nublado', 'calor', 'alta', 'falsa'],
-#     ['lluvia', 'templado', 'alta', 'falsa'],
-#     ['lluvia', 'frio', 'normal', 'falsa'],
-#     ['lluvia', 'frio', 'normal', 'verdadera'],
-#     ['nublado', 'frio', 'normal', 'verdadera'],
-#     ['soleado', 'templado', 'alta', 'falsa'],
-#     ['soleado', 'frio', 'normal', 'falsa'],
-#     ['lluvia', 'templado', 'normal', 'falsa'],
-#     ['soleado', 'templado', 'normal', 'verdadera'],
-#     ['nublado', 'templado', 'alta', 'verdadera'],
-#     ['nublado', 'calor', 'normal', 'falsa'],
-#     ['lluvia', 'templado', 'alta', 'verdadera'],
-# ]
 from collections import defaultdict
 from filtro import cargar_textos
 from pathlib import Path
@@ -24,25 +6,25 @@ from collections import defaultdict
 import math
 import unicodedata
 
-print("antes de sacar textos")
-# X = sacarTextos()
-textos_por_categoria = cargar_textos()
 
-print("modelos ya entrenados")
-X = [textos_por_categoria["business"], 
-               textos_por_categoria["entertainment"], 
-               textos_por_categoria["politics"],
-               textos_por_categoria["sport"],
-                textos_por_categoria["tech"]
-            ]
-
-# Etiquetas (sí o no jugar)
-#y = ['no', 'no', 'sí', 'sí', 'sí', 'no', 'sí', 'no', 'sí', 'sí', 'sí', 'sí', 'sí', 'no']
-y = ['business', 'entertainment', 'politics', 'sport', 'tech',]
 
 class NaiveBayes:
-
-    def preprocesar_texto_uk(texto):
+    def __init__(self):
+        self.textos_por_categoria = cargar_textos()
+        self.X = [
+                self.textos_por_categoria["business"], 
+                self.textos_por_categoria["entertainment"], 
+                self.textos_por_categoria["politics"],
+                self.textos_por_categoria["sport"],
+                self.textos_por_categoria["tech"]
+                ]
+        self.y = ['business', 'entertainment', 'politics', 'sport', 'tech',]
+        print("Textos cargados a la clase")
+        
+        self.modelo = self.entrenar_naive_bayes(self.X, self.y)
+        print("Modelo entrenado")
+    
+    def preprocesar_texto_uk(self, texto):
         if isinstance(texto, list):  # Si recibe una lista por error
             texto = ' '.join(texto)  # Convierte a string
         
@@ -69,7 +51,7 @@ class NaiveBayes:
         }
         return [p for p in palabras if p not in stopwords and len(p) > 2]
 
-    def entrenar_naive_bayes(X, y):
+    def entrenar_naive_bayes(self, X, y):
         modelo = {
             'prior': defaultdict(float),
             'log_prob': defaultdict(lambda: defaultdict(float)),
@@ -90,7 +72,7 @@ class NaiveBayes:
         
         # Construcción del modelo
         for doc, clase in zip(documentos, etiquetas):
-            palabras = NaiveBayes.preprocesar_texto_uk(doc)
+            palabras = self.preprocesar_texto_uk(doc)
             modelo['total_palabras'][clase] += len(palabras)
             for p in palabras:
                 modelo['log_prob'][clase][p] += 1
@@ -108,8 +90,8 @@ class NaiveBayes:
         
         return modelo
 
-    def predecir(modelo, texto):
-        palabras = NaiveBayes.preprocesar_texto_uk(texto)
+    def predecir(self, modelo, texto):
+        palabras = self.preprocesar_texto_uk(texto)
         scores = {clase: modelo['prior'][clase] for clase in modelo['prior']}
         
         for clase in scores:
@@ -131,11 +113,24 @@ class NaiveBayes:
         except Exception as e:
             return f"Error al leer el archivo: {e}"
     
-    def predictUserInput(userInput):
+    def predictUserInput(self, userInput):
+        print("Texto recibido por la clase: ", userInput)
         nueva_entrada = ['']
-        nueva_entrada.append(NaiveBayes.leer_archivo_especifico())
-        modelo = NaiveBayes.entrenar_naive_bayes(X, y)
-        prediccion = NaiveBayes.predecir(modelo, userInput)
-        print("¿Jugar?", prediccion)
+        nueva_entrada.append(userInput)
+        prediccion = self.predecir(self.modelo, userInput)
+        print("Que noticia es ? ", prediccion)
        
-        return userInput
+       
+        if(prediccion == 'business'):
+            prediccion = 'negocios'
+        elif(prediccion == 'entertainment'):
+            prediccion = 'entretenimiento'
+        elif(prediccion == 'politics'):
+            prediccion = 'politica'
+        elif(prediccion == 'sport'):
+            prediccion = 'deportes'
+        elif(prediccion == 'tech'):
+            prediccion = 'tecnologia'
+        else:
+            prediccion = 'No se ha podido clasificar la noticia'
+        return prediccion

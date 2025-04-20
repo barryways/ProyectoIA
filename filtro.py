@@ -82,9 +82,9 @@ def cargar_textos():
     # Definir categorías y rutas base
     categorias = ["business", "entertainment", "politics", "sport", "tech"]
     bases = {
-        "summaries": Path(__file__).parent / ".." / "BBC News Summary" / "BBC News Summary" / "Summaries",
-        "articles_1": Path(__file__).parent / ".." / "BBC News Summary" / "BBC News Summary" / "News Articles",
-        "articles_2": Path(__file__).parent / ".." / "BBC News Summary" / "News Articles"
+        "summaries": Path(__file__).parent  / "BBC News Summary" / "BBC News Summary" / "Summaries",
+        "articles_1": Path(__file__).parent  / "BBC News Summary" / "BBC News Summary" / "News Articles",
+        "articles_2": Path(__file__).parent  / "BBC News Summary" / "News Articles"
     }
 
     # Diccionario para almacenar todos los textos
