@@ -5,24 +5,36 @@ import re
 from collections import defaultdict
 import math
 import unicodedata
+import pickle
 
 
 
 class NaiveBayes:
-    def __init__(self):
-        self.textos_por_categoria = cargar_textos()
-        self.X = [
-                self.textos_por_categoria["business"], 
-                self.textos_por_categoria["entertainment"], 
+    def __init__(self, usar_modelo_guardado=True):
+        if usar_modelo_guardado and Path("modelo_naive_bayes.pkl").exists():
+            print("Cargando modelo desde archivo...")
+            with open("modelo_naive_bayes.pkl", "rb") as f:
+                self.modelo = pickle.load(f)
+            print("Modelo cargado desde archivo")
+        else:
+            self.textos_por_categoria = cargar_textos()
+            self.X = [
+                self.textos_por_categoria["business"],
+                self.textos_por_categoria["entertainment"],
                 self.textos_por_categoria["politics"],
                 self.textos_por_categoria["sport"],
                 self.textos_por_categoria["tech"]
-                ]
-        self.y = ['business', 'entertainment', 'politics', 'sport', 'tech',]
-        print("Textos cargados a la clase")
-        
-        self.modelo = self.entrenar_naive_bayes(self.X, self.y)
-        print("Modelo entrenado")
+            ]
+            self.y = ['business', 'entertainment', 'politics', 'sport', 'tech']
+            print("Textos cargados a la clase")
+            self.modelo = self.entrenar_naive_bayes(self.X, self.y)
+            print("Modelo entrenado")
+            with open("modelo_naive_bayes.pkl", "wb") as f:
+                pickle.dump(self.modelo, f)
+            print("Modelo guardado en archivo")
+
+    def default_float_dict(self):
+        return defaultdict(float)                                                                                                                                               
     
     def preprocesar_texto_uk(self, texto):
         if isinstance(texto, list):  # Si recibe una lista por error
@@ -54,7 +66,7 @@ class NaiveBayes:
     def entrenar_naive_bayes(self, X, y):
         modelo = {
             'prior': defaultdict(float),
-            'log_prob': defaultdict(lambda: defaultdict(float)),
+            'log_prob': defaultdict(self.default_float_dict),  # <- cambiado
             'vocabulario': set(),
             'total_palabras': defaultdict(int)
         }
