@@ -1,4 +1,3 @@
-Collecting workspace information```markdown
 # ProyectoIA - Clasificador de Noticias con Naive Bayes
 
 Este proyecto es una aplicación web que utiliza un modelo de clasificación Naive Bayes para predecir la categoría de una noticia ingresada por el usuario. Las categorías disponibles son: negocios, entretenimiento, política, deportes y tecnología.
@@ -31,7 +30,7 @@ Este proyecto es una aplicación web que utiliza un modelo de clasificación Nai
 
 1. Clona este repositorio:
    ```bash
-   git clone <URL_DEL_REPOSITORIO>
+   git clone https://github.com/barryways/ProyectoIA
    cd ProyectoIA
    ```
 
@@ -81,4 +80,3 @@ Si deseas contribuir a este proyecto, por favor abre un issue o envía un pull r
 ## Licencia
 
 Este proyecto está bajo la licencia MIT.
-```
