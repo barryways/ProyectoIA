@@ -6,6 +6,11 @@ from collections import defaultdict
 import math
 import unicodedata
 import pickle
+from sklearn.metrics import (
+    precision_recall_fscore_support,
+    confusion_matrix,
+    classification_report
+)
 
 
 
@@ -146,3 +151,23 @@ class NaiveBayes:
         else:
             prediccion = 'No se ha podido clasificar la noticia'
         return prediccion
+    
+    def evaluate(self, X_test, y_test):
+        # Genera predicciones
+        y_pred = [ self.predecir(self.modelo, doc) for doc in X_test ]
+
+        # Calcula métricas por etiqueta
+        precision, recall, f1, support = precision_recall_fscore_support(
+            y_test, y_pred, labels=self.y, zero_division=0
+        )
+
+        # Matriz de confusión
+        cm = confusion_matrix(y_test, y_pred, labels=self.y)
+
+        return {
+            'precision': dict(zip(self.y, precision)),
+            'recall':    dict(zip(self.y, recall)),
+            'f1_score':  dict(zip(self.y, f1)),
+            'support':   dict(zip(self.y, support)),
+            'confusion_matrix': cm
+        }
